@@ -1,6 +1,7 @@
 const app = require("./app");
+const dotenv = require("dotenv");
 
-const port = 3000;
+dotenv.config({ path: "./config.env" });
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -9,6 +10,8 @@ app.get("/", (req, res) => {
   });
 });
 
+const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
-  console.log("app is running and listening");
+  console.log(` server is up and running, listening on port ${port}`);
 });
