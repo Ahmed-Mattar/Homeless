@@ -19,11 +19,23 @@ exports.getAllHomeless = async (req, res) => {
 	}
 };
 
-exports.getHomeless = (req, res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'This route is not yet defined!'
-	});
+exports.getHomeless = async (req, res) => {
+	try {
+		const homeless = await Homeless.findById(req.params.id);
+		// Homeless.findOne({_id: req.params.id})
+
+		res.status(200).json({
+			status: 'success',
+			data: {
+				homeless
+			}
+		});
+	} catch (error) {
+		res.status(404).json({
+			status: 'fail',
+			message: error
+		});
+	}
 };
 
 exports.createHomeless = async (req, res) => {

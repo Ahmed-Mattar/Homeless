@@ -18,7 +18,10 @@ const HomelessSchema = new mongoose.Schema({
 		enum: [ 'Male', 'Female' ],
 		required: [ true, 'A case published must have a gender' ]
 	},
-	comments: [ { body: String, date: Date } ],
+	underage: {
+		type: Boolean,
+		required: [ true, "A case published must be known if it's underage " ]
+	},
 	date: { type: Date, default: Date.now }
 });
 
