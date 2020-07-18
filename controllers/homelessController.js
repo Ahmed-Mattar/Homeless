@@ -56,16 +56,39 @@ exports.createHomeless = async (req, res) => {
 	}
 };
 
-exports.updateHomeless = (req, res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'This route is not yet defined!'
-	});
+exports.updateHomeless = async (req, res) => {
+	try {
+		const homeless = await Homeless.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+			runValidators: true
+		});
+		// new -- > the new updated documents is the one that gets returned
+
+		res.status(200).json({
+			status: 'success',
+			data: {
+				homeless
+			}
+		});
+	} catch (error) {
+		res.status(404).json({
+			status: 'fail',
+			message: error
+		});
+	}
 };
 
-exports.deleteHomeless = (req, res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'This route is not yet defined!'
-	});
+exports.deleteHomeless = async (req, res) => {
+	try {
+		await Homeless.findByIdAndDelete(req.params.id);
+		res.status(500).json({
+			status: 'success',
+			data: null
+		});
+	} catch (error) {
+		res.status(404).json({
+			status: 'fail',
+			message: error
+		});
+	}
 };
