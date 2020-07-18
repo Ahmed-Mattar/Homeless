@@ -13,11 +13,18 @@ const HomelessSchema = new mongoose.Schema({
 		type: Boolean,
 		required: [ true, 'A case published must have a medical status' ]
 	},
+	gender: {
+		type: String,
+		enum: [ 'Male', 'Female' ],
+		required: [ true, 'A case published must have a gender' ]
+	},
 	comments: [ { body: String, date: Date } ],
 	date: { type: Date, default: Date.now }
 });
 
 const Homeless = mongoose.model('Homeless', HomelessSchema);
+
+module.exports = Homeless;
 
 // const testHomeless = new Homeless({
 // 	author: 'ahmed mattar',
