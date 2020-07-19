@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 
 const HomelessSchema = new mongoose.Schema({
+	name: {
+		type: String
+	},
 	author: {
 		type: String,
 		required: [ true, 'A case published must have an author' ]
 	},
 	description: {
 		type: String,
-		required: [ true, 'A case published must have a brief description' ]
+		required: [ true, 'A case published must have a brief description' ],
+		trim: true
 	},
 	medicalCare: {
 		type: Boolean,
@@ -18,11 +22,21 @@ const HomelessSchema = new mongoose.Schema({
 		enum: [ 'Male', 'Female' ],
 		required: [ true, 'A case published must have a gender' ]
 	},
-	underage: {
+	underAge: {
 		type: Boolean,
 		required: [ true, "A case published must be known if it's underage " ]
 	},
-	date: { type: Date, default: Date.now }
+	age: {
+		type: Number,
+		min: 3,
+		max: 100
+	},
+	imageCover: {
+		type: String
+	},
+	createdAt: { type: Date, default: Date.now, select: false }
+	// location
+	// comments
 });
 
 const Homeless = mongoose.model('Homeless', HomelessSchema);

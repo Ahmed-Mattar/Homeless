@@ -1,9 +1,19 @@
 const Homeless = require('./../models/homelessModel');
+const APIFeatures = require('./../utils/apiFeatures');
+
+exports.aliasNearMe = (req, res, next) => {
+	// logic for getting near me locations in a certain radius
+	next();
+};
 
 exports.getAllHomeless = async (req, res) => {
 	try {
-		const homeless = await Homeless.find();
+		// EXECUTE QUERY
+		const features = new APIFeatures(Homeless.find(), req.query).filter().sort().limitFields().paginate();
 
+		const homeless = await features.query;
+
+		// SEND RESPONSE
 		res.status(200).json({
 			status: 'success',
 			results: homeless.length,
@@ -14,7 +24,8 @@ exports.getAllHomeless = async (req, res) => {
 	} catch (error) {
 		res.status(404).json({
 			status: 'fail',
-			message: error
+			message: error.message,
+			error
 		});
 	}
 };
@@ -40,6 +51,7 @@ exports.getHomeless = async (req, res) => {
 
 exports.createHomeless = async (req, res) => {
 	try {
+		console.log(req.body);
 		const newHomeless = await Homeless.create(req.body);
 
 		res.status(201).json({

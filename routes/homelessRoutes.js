@@ -3,6 +3,8 @@ const homelessController = require('./../controllers/homelessController');
 
 const router = express.Router();
 
+router.route('/near-me').get(homelessController.aliasNearMe, homelessController.getAllHomeless);
+
 router.route('/').get(homelessController.getAllHomeless).post(homelessController.createHomeless);
 
 router
