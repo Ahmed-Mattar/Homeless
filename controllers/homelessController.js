@@ -104,3 +104,38 @@ exports.deleteHomeless = async (req, res) => {
 		});
 	}
 };
+
+exports.getHomelessStats = async (req, res) => {
+	try {
+		// the documents pass throgh stages of processing // aggregation framework
+		const stats = await Homeless.aggregate([
+			{
+				$match: { age: { $lte: 18 } }
+			},
+			{
+				$group: {
+					_id: '$gender', //everything in one group not seperated
+					numHomeless: { $sum: 1 },
+					averageAge: { $avg: '$age' },
+					minAge: { $min: '$age' },
+					maxAge: { $max: '$age' }
+					//femaleNum: { $filter: { input: gender, as: 'Female' } }
+					// MaleNum: {}
+				}
+			},
+			{
+				$sort: { numHomeless: -1 } // 1 for ascending -1 for desc
+			}
+		]);
+
+		res.status(200).json({
+			status: 'success',
+			data: stats
+		});
+	} catch (error) {
+		res.status(404).json({
+			status: 'fail',
+			message: error
+		});
+	}
+};
