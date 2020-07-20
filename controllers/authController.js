@@ -6,16 +6,6 @@ const sendEmail = require('./../utils/email');
 
 const createSendToken = (user, statusCode, res) => {
 	const token = signToken(user._id);
-	const cookieOptions = {
-		expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
-		httpOnly: true
-	};
-	if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
-	res.cookie('jwt', token, cookieOptions);
-
-	// Remove password from output
-	user.password = undefined;
 
 	res.status(statusCode).json({
 		status: 'success',
@@ -42,15 +32,7 @@ exports.signup = async (req, res, next) => {
 			role: req.body.role
 		});
 
-		const token = signToken(newUser._id);
-
-		res.status(201).json({
-			status: 'success',
-			token,
-			data: {
-				user: newUser
-			}
-		});
+		createSendToken(newUser, 201, res);
 	} catch (error) {
 		res.status(400).json({
 			status: 'fail',
@@ -74,11 +56,7 @@ exports.login = async (req, res, next) => {
 		}
 
 		// 3) if everything is ok, send jsonwebtoken to client
-		const token = signToken(user._id);
-		res.status(200).json({
-			status: 'success',
-			token
-		});
+		createSendToken(user, 200, res);
 	} catch (error) {
 		res.status(400).json({
 			status: 'fail',
@@ -204,13 +182,32 @@ exports.resetPassword = async (req, res, next) => {
 		await user.save();
 		// 3) Update changedPasswordAt property for the user
 		// 4) log the user in, send JWT
-		const token = signToken(user._id);
-		res.status(200).json({
-			status: 'success',
-			token
-		});
+		createSendToken(user, 200, res);
 	} catch (error) {
 		res.status(400).json({
+			status: 'fail',
+			message: error.message
+		});
+	}
+};
+
+// for logged in users
+exports.updatePassword = async (req, res, next) => {
+	try {
+		// 1) Get user from collection
+		const user = await User.findById(req.user.id).select('+password');
+		// 2) check if POSTed password is correct
+		if (!await user.correctPassword(req.body.passwordCurrent, user.password)) {
+			throw new Error('Your current password is wrong');
+		}
+		// 3) If so, update password
+		user.password = req.body.password;
+		user.passwordConfirm = req.body.passwordConfirm;
+		await user.save();
+		// 4) Log user in, send Jwt
+		createSendToken(user, 200, res);
+	} catch (error) {
+		res.status(401).json({
 			status: 'fail',
 			message: error.message
 		});
