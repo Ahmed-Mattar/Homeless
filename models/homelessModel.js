@@ -1,6 +1,20 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+const location = new mongoose.Schema({
+	type: {
+		type: String,
+		default: 'Point',
+		enum: [ 'Point' ]
+	},
+	coordinates: {
+		type: [ Number ],
+		required: true
+	},
+	address: String,
+	description: String
+});
+
 const HomelessSchema = new mongoose.Schema({
 	name: {
 		type: String,
@@ -19,6 +33,11 @@ const HomelessSchema = new mongoose.Schema({
 		trim: true,
 		maxlength: [ 150, 'A description of a case must have more or equal to 150 character' ]
 	},
+	location: {
+		type: location,
+		required: true
+	},
+
 	medicalCare: {
 		type: Boolean,
 		required: [ true, 'A case published must have a medical status' ]

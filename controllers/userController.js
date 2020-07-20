@@ -28,7 +28,7 @@ exports.getAllUsers = async (req, res) => {
 	}
 };
 
-exports.updateMe = async (req, res, next) => {
+exports.updateMe = async (req, res) => {
 	try {
 		// 1) Create error if user POSTs password data
 		if (req.body.password || req.body.passwordConfim) {
@@ -43,6 +43,21 @@ exports.updateMe = async (req, res, next) => {
 			data: {
 				user: updatedUser
 			}
+		});
+	} catch (error) {
+		res.status(400).json({
+			status: 'error',
+			message: error.message
+		});
+	}
+};
+
+exports.deleteMe = async (req, res) => {
+	try {
+		await User.findByIdAndUpdate(req.user.id, { active: false });
+		res.status(204).json({
+			status: 'success',
+			data: null
 		});
 	} catch (error) {
 		res.status(400).json({
