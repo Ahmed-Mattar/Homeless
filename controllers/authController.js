@@ -1,7 +1,30 @@
+const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const sendEmail = require('./../utils/email');
+
+const createSendToken = (user, statusCode, res) => {
+	const token = signToken(user._id);
+	const cookieOptions = {
+		expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+		httpOnly: true
+	};
+	if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+	res.cookie('jwt', token, cookieOptions);
+
+	// Remove password from output
+	user.password = undefined;
+
+	res.status(statusCode).json({
+		status: 'success',
+		token,
+		data: {
+			user
+		}
+	});
+};
 
 const signToken = (id) => {
 	return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -161,4 +184,35 @@ exports.forgotPassword = async (req, res, next) => {
 	}
 };
 
-exports.resetPassword = (req, res, next) => {};
+exports.resetPassword = async (req, res, next) => {
+	try {
+		// 1) get user based on the token
+		const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+		const user = await User.findOne({
+			passwordResetToken: hashedToken,
+			passwordResetExpires: { $gt: Date.now() }
+		});
+		// 2) if Token has not expired, and there is user, set the new password
+		if (!user) {
+			throw new Error('Token is invalid or has expired');
+		}
+		user.password = req.body.password;
+		user.passwordConfirm = req.body.passwordConfirm;
+		user.passwordResetToken = undefined;
+		user.passwordResetExpires = undefined;
+		await user.save();
+		// 3) Update changedPasswordAt property for the user
+		// 4) log the user in, send JWT
+		const token = signToken(user._id);
+		res.status(200).json({
+			status: 'success',
+			token
+		});
+	} catch (error) {
+		res.status(400).json({
+			status: 'fail',
+			message: error.message
+		});
+	}
+};
