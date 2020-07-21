@@ -139,3 +139,34 @@ exports.getHomelessStats = async (req, res) => {
 		});
 	}
 };
+
+// /homeless-within/:distance/center/:latlng/unit/:unit
+exports.getHomelessWithin = async (req, res, next) => {
+	try {
+		//distance --> radius
+		// latlng ---> center
+		const { distance, latlng, unit } = req.params;
+		const [ lat, lng ] = latlng.split(',');
+		// mongo expect it to be radians
+		const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+		if (!lat || !lng) {
+			throw new Error('Please provide latitude and longitude in the format lat,lng');
+		}
+
+		const homeless = await Homeless.find({
+			location: { $geoWithin: { $centerSphere: [ [ lng, lat ], radius ] } }
+		});
+
+		res.status(200).json({
+			status: 'success',
+			results: homeless.length,
+			data: homeless
+		});
+	} catch (error) {
+		res.status(400).json({
+			status: 'fail',
+			message: error.message
+		});
+	}
+};

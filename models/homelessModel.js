@@ -20,7 +20,7 @@ const HomelessSchema = new mongoose.Schema({
 		type: String,
 		trim: true,
 		maxlength: [ 40, 'A name must have less or equal than 40 characters' ],
-		minlength: [ 10, 'A name must have more or equal than 10 characters' ],
+		minlength: [ 4, 'A name must have more or equal than 5 characters' ],
 		validate: [ validator.isAlpha, 'name must only contain characters ' ]
 	},
 	author: {
@@ -31,7 +31,7 @@ const HomelessSchema = new mongoose.Schema({
 		type: String,
 		required: [ true, 'A case published must have a brief description' ],
 		trim: true,
-		maxlength: [ 150, 'A description of a case must have more or equal to 150 character' ]
+		maxlength: [ 150, 'A description of a case must have less or equal to 150 character' ]
 	},
 	location: {
 		type: location,
@@ -65,6 +65,8 @@ const HomelessSchema = new mongoose.Schema({
 	// location
 	// comments
 });
+
+HomelessSchema.index({ location: '2dsphere' });
 
 const Homeless = mongoose.model('Homeless', HomelessSchema);
 

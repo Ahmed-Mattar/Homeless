@@ -4,7 +4,8 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.route('/near-me').get(homelessController.aliasNearMe, homelessController.getAllHomeless);
+// homelesss/-within/233/center/-40,45/unit/mi
+router.route('/homeless-within/:distance/center/:latlng/unit/:unit').get(homelessController.getHomelessWithin);
 
 router.route('/homeless-stats-underage').get(homelessController.getHomelessStats);
 
