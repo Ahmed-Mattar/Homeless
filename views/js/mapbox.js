@@ -15,11 +15,6 @@ const getAllHomeless = async (url) => {
 	}
 };
 
-(async function() {
-	let allHomeless = await getAllHomeless(AllHomelessURL);
-	let allHomelessLocations = allHomeless.map((x) => x.location);
-})();
-
 //getAllHomeless(AllHomelessURL);
 
 let bounds = [
@@ -35,3 +30,37 @@ var map = new mapboxgl.Map({
 	zoom: 8,
 	maxBounds: bounds
 });
+
+(async function() {
+	let allHomeless = await getAllHomeless(AllHomelessURL);
+	let allHomelessLocations = allHomeless.map((x) => x.location);
+
+	for (let i = 0; i < allHomelessLocations.length; i++) {
+		let lat = allHomelessLocations[i].coordinates[0];
+		let lng = allHomelessLocations[i].coordinates[1];
+
+		current = allHomeless[i];
+		let html = `<h6>${current.name}</h6><p>medical care: ${current.medicalCare} <br> Gender: ${current.gender} <br>age: ${current.age}<br> Description: ${current.description}</p>`;
+		let popup = new mapboxgl.Popup({ offset: 25 }).setHTML(html);
+
+		new mapboxgl.Marker()
+			.setLngLat([ lng, lat ])
+			.setPopup(popup) // sets a popup on this marker
+			.addTo(map);
+	}
+
+	// for (let i = 0; i < allHomelessLocations.length; i++) {
+	// 	let lat = allHomelessLocations[i].coordinates[0];
+	// 	let lng = allHomelessLocations[i].coordinates[1];
+
+	// 	// add marker
+	// 	new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
+	// 	// add popup
+	// 	new mapboxgl.Popup({
+	// 		offset: 30
+	// 	})
+	// 		.setLngLat([ lng, lat ])
+	// 		.setHTML(`<p>${allHomeless[i]._id}</p>`)
+	// 		.addTo(map);
+	// }
+})();
