@@ -8,11 +8,17 @@ const router = express.Router();
 router.route('/homeless-within/:distance/center/:latlng/unit/:unit').get(homelessController.getHomelessWithin);
 
 router.route('/homeless-stats-underage').get(homelessController.getHomelessStats);
-
+/*
 router
 	.route('/')
 	.get(authController.protect, homelessController.getAllHomeless)
 	.post(homelessController.createHomeless);
+*/
+
+router
+	.route('/')
+	.get(homelessController.getAllHomeless)
+	.post(authController.protect, homelessController.createHomeless);
 
 router
 	.route('/:id')

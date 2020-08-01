@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="/img/favicon.png" />
+        <link rel="stylesheet" href="/css/styles.css">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css'
+            rel='stylesheet'/>
+        <title>Invisible People</title>
+    </head>
+    <body>
+
+        <!--Navbar -->
+        <div class="container">
+            <nav class="navbar navbar-expand-md navbar-light bg-light">
+                <a class="navbar-brand" href="#">Invisible People</a>
+                <button class="navbar-toggler" type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span
+                                    class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"">Register</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!--/.Navbar -->
+
+
+
+        <!--Map section-->
+        <div class="container">
+            <div class="row map-container">
+                <div class="col-md-9">
+                    <div class="m-3" id='map' style='width: auto; height:
+                        500px;'></div>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+            </div>
+
+        </div>
+
+        <!--/.Map section-->
+
+        <!-- Footer -->
+        <div class="container mt-5">
+            <footer class="footer bg-light">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 h-100 text-center text-lg-left
+                            my-auto">
+                            <ul class="list-inline mb-2">
+                                <li class="list-inline-item">
+                                    <a href="#">About</a>
+                                </li>
+                                <li class="list-inline-item">&sdot;</li>
+                                <li class="list-inline-item">
+                                    <a href="#">Contact</a>
+                                </li>
+                                <li class="list-inline-item">&sdot;</li>
+                                <li class="list-inline-item">
+                                    <a href="#">Terms of Use</a>
+                                </li>
+                                <li class="list-inline-item">&sdot;</li>
+                                <li class="list-inline-item">
+                                    <a href="#">Privacy Policy</a>
+                                </li>
+                            </ul>
+                            <p class="text-muted small mb-4 mb-lg-0">&copy;
+                                Ahmed Mattar. All Rights Reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!--/ .Footer -->
+
+
+        <script src="js/mapbox.js"></script>
+    </body>
+</html>

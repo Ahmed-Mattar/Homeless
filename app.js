@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -5,13 +6,23 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
 
 const homelessRouter = require('./routes/homelessRoutes');
 const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 // 1) MIDDLEWARES
+
+// Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// cors
+app.use(cors());
 // Set security http headers
 app.use(helmet());
 
@@ -52,13 +63,6 @@ app.use((req, res, next) => {
 });
 
 // ROUTERS
-
-// app.get('/', (req, res) => {
-// 	res.status(200).json({
-// 		status: 200,
-// 		message: 'Welcome to the server'
-// 	});
-// });
 
 app.use('/api/v1/homeless', homelessRouter);
 app.use('/api/v1/users', userRouter);
