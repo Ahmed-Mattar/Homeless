@@ -48,19 +48,4 @@ var map = new mapboxgl.Map({
 			.setPopup(popup) // sets a popup on this marker
 			.addTo(map);
 	}
-
-	// for (let i = 0; i < allHomelessLocations.length; i++) {
-	// 	let lat = allHomelessLocations[i].coordinates[0];
-	// 	let lng = allHomelessLocations[i].coordinates[1];
-
-	// 	// add marker
-	// 	new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
-	// 	// add popup
-	// 	new mapboxgl.Popup({
-	// 		offset: 30
-	// 	})
-	// 		.setLngLat([ lng, lat ])
-	// 		.setHTML(`<p>${allHomeless[i]._id}</p>`)
-	// 		.addTo(map);
-	// }
 })();
